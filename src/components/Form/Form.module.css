@@ -1,0 +1,44 @@
+.inputContainer {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+form {
+    height: 13em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.username, .accessKey {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+input {
+    padding: 0.5em;
+    width: 20rem;
+}
+
+.invalid input {
+    border: 1px solid #b40e0e;
+    background-color: #fddddd;
+}
+  
+.invalid input:focus {
+    border-color: #ff8800;
+    background-color: #fbe8d2;
+}
+
+.errorText {
+    color: #b40e0e;
+    margin: 0;
+}
+
+.button {
+    width: 100px;
+    padding: 1em;
+    cursor: pointer;
+}
