@@ -8,6 +8,7 @@ import classes from './Form.module.css';
 
 const Form = (props) => {
   const [shown, setShown] = useState(false);
+  const [error, setError] = useState(null);
 
   const showKeyHandler = () => {
     setShown(!shown);
@@ -37,8 +38,9 @@ const Form = (props) => {
     isFormValid = true;
   }
 
-  const formSubmissionHandler = (e) => {
+  const formSubmissionHandler = async(e) => {
     e.preventDefault();
+    setError(null);
 
     console.log(enteredUserName);
     console.log(enteredKey);
@@ -47,7 +49,21 @@ const Form = (props) => {
       return;
     };
 
-    
+    try {
+      const response = await fetch(`https://api.eu-central-1.saucelabs.com/rest/v1/${enteredUserName}/jobs`, {
+        method: 'GET',
+        headers: new Headers({
+          'Authorization': `${enteredUserName}:${enteredKey}`
+        })
+      });
+      if(!response.ok) {
+        throw new Error('Something went wrong!');
+      }
+      const data = await response.json();
+      console.log(data);
+    } catch(error) {
+      setError(error.message)
+    };
 
     resetUserName();
     resetAccessKey();
