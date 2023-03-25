@@ -64,3 +64,8 @@ input:focus {
     right: -145px;
     cursor: pointer;
 }
+
+select {
+    padding: 0.5em;
+    margin-bottom: 1em;
+}

@@ -9,6 +9,7 @@ import classes from './Form.module.css';
 const Form = (props) => {
   const [shown, setShown] = useState(false);
   const [error, setError] = useState(null);
+  const [region, setRegion] = useState("eu");
 
   const showKeyHandler = () => {
     setShown(!shown);
@@ -49,21 +50,41 @@ const Form = (props) => {
       return;
     };
 
-    try {
-      const response = await fetch(`https://api.eu-central-1.saucelabs.com/rest/v1/${enteredUserName}/jobs`, {
-        method: 'GET',
-        headers: new Headers({
-          'Authorization': `${enteredUserName}:${enteredKey}`
-        })
-      });
-      if(!response.ok) {
-        throw new Error('Something went wrong!');
-      }
-      const data = await response.json();
-      console.log(data);
-    } catch(error) {
-      setError(error.message)
-    };
+    if(region === 'eu') {
+      try {
+        const response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.eu-central-1.saucelabs.com/rest/v1/${enteredUserName}/jobs`, {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Basic ' + btoa(`${enteredUserName}:${enteredKey}`)
+          },
+          
+        });
+        if(!response.ok) {
+          throw new Error('Something went wrong!');
+        }
+        const data = await response.json();
+        console.log(data);
+      } catch(error) {
+        setError(error.message)
+      };
+    } else {
+      try {
+        const response = await fetch(`https://cors-anywhere.herokuapp.com/https://api.us-west-1.saucelabs.com/rest/v1/${enteredUserName}/jobs`, {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Basic ' + btoa(`${enteredUserName}:${enteredKey}`)
+          },
+          
+        });
+        if(!response.ok) {
+          throw new Error('Something went wrong!');
+        }
+        const data = await response.json();
+        console.log(data);
+      } catch(error) {
+        setError(error.message)
+      };
+    }
 
     resetUserName();
     resetAccessKey();
@@ -99,6 +120,13 @@ const Form = (props) => {
               {<img src={ shown ? show : hidden } alt="show key" className={classes.shown}/> }
             </span>
             {accessKeyError && <p className={classes.errorText2}>Access key must be valid</p>}
+          </div>
+          <div className={classes.username}>
+            <label htmlFor="region">Region</label>
+            <select id="region" defaultValue="eu" value={region} onChange={e => setRegion(e.target.value)} >
+              <option value="eu">EU</option>
+              <option value="us">US</option>
+            </select>
           </div>
           <button disabled={!isFormValid} className={classes.button}>Fetch</button>
         </form>
