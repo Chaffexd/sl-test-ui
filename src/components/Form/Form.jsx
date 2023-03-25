@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import useInput from '../../hooks/use-input';
+
+import show from '../../assets/shown.png';
+import hidden from '../../assets/hidden.png';
 
 import classes from './Form.module.css';
 
 const Form = (props) => {
+  const [shown, setShown] = useState(false);
+
+  const showKeyHandler = () => {
+    setShown(!shown);
+  };
+
   const {
     value: enteredUserName,
     hasError: userNameError,
@@ -36,7 +45,9 @@ const Form = (props) => {
 
     if(!userNameValid && !accessKeyValid) {
       return;
-    }
+    };
+
+    
 
     resetUserName();
     resetAccessKey();
@@ -47,7 +58,7 @@ const Form = (props) => {
 
   return (
     <div className={classes.inputContainer}>
-        <form onSubmit={formSubmissionHandler}>
+        <form onSubmit={formSubmissionHandler} className={classes.form}>
           <div className={userNameInputClasses}>
             <label htmlFor="username">Sauce Labs Username</label>
             <input 
@@ -62,13 +73,16 @@ const Form = (props) => {
           <div className={accessKeyInputClasses}>
             <label htmlFor="key">Sauce Labs Access Key</label>
             <input 
-                type="text"
+                type= {shown ? "text" : "password" }
                 id="key"
                 value={enteredKey}
                 onChange={keyChangedHandler}
                 onBlur={accessKeyBlur}
             />
-            {accessKeyError && <p className={classes.errorText}>Access key must be valid</p>}
+            <span onClick={showKeyHandler}>
+              {<img src={ shown ? show : hidden } alt="show key" className={classes.shown}/> }
+            </span>
+            {accessKeyError && <p className={classes.errorText2}>Access key must be valid</p>}
           </div>
           <button disabled={!isFormValid} className={classes.button}>Fetch</button>
         </form>
