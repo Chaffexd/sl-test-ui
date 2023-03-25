@@ -1,11 +1,10 @@
 .inputContainer {
     display: flex;
     justify-content: center;
-    width: 100%;
 }
 
 form {
-    height: 13em;
+    height: 20em;
     display: flex;
     flex-direction: column;
     justify-content: space-between;

@@ -3,10 +3,12 @@ import useInput from '../../hooks/use-input';
 
 import show from '../../assets/shown.png';
 import hidden from '../../assets/hidden.png';
+import TestList from './TestList';
 
 import classes from './Form.module.css';
 
 const Form = (props) => {
+  const [tests, setTests] = useState([]);
   const [shown, setShown] = useState(false);
   const [error, setError] = useState(null);
   const [region, setRegion] = useState("eu");
@@ -64,6 +66,21 @@ const Form = (props) => {
         }
         const data = await response.json();
         console.log(data);
+
+        const tests = [];
+
+        for(const key in data) {
+          tests.push({
+            id: key,
+            status: data[key].status,
+            text: data[key].base_config.browserName,
+            info: data[key].base_config.browserVersion,
+            version: data[key].base_config.platformName
+          });
+        };
+
+        setTests(tests);
+
       } catch(error) {
         setError(error.message)
       };
@@ -92,6 +109,15 @@ const Form = (props) => {
 
   const userNameInputClasses = userNameError ? `${classes.username} ${classes.invalid}` : `${classes.username}`;
   const accessKeyInputClasses = userNameError ? `${classes.username} ${classes.invalid}` : `${classes.username}`;
+
+  let testList = <p>No tests found.</p>
+  if(tests.length > 0) {
+    testList = <TestList tests={tests} />
+  }
+
+  if(error) {
+    testList = <p>{error}</p>
+  }
 
   return (
     <div className={classes.inputContainer}>
@@ -123,13 +149,14 @@ const Form = (props) => {
           </div>
           <div className={classes.username}>
             <label htmlFor="region">Region</label>
-            <select id="region" defaultValue="eu" value={region} onChange={e => setRegion(e.target.value)} >
+            <select id="region" value={region} onChange={e => setRegion(e.target.value)} >
               <option value="eu">EU</option>
               <option value="us">US</option>
             </select>
           </div>
           <button disabled={!isFormValid} className={classes.button}>Fetch</button>
         </form>
+        {testList}
     </div>
   );
 };
