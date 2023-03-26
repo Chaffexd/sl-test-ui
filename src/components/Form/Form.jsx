@@ -73,9 +73,10 @@ const Form = (props) => {
           tests.push({
             id: key,
             status: data[key].status,
-            text: data[key].base_config.browserName,
-            info: data[key].base_config.browserVersion,
-            version: data[key].base_config.platformName
+            browserName: data[key].base_config.browserName || data[key].base_config[2], // device name
+            browserVersion: data[key].base_config.browserVersion || data[key].base_config[3], // platform version
+            platformName: data[key].base_config.platformName, // platform name
+            team: data[key].public
           });
         };
 
